@@ -1,7 +1,15 @@
+# Discord Stuff
 import discord
-import spotipy
+
+# Spotify Stuff
+# import spotipy
+# from spotipy.oauth2 import SpotifyClientCredentials
+
+# Utility Imports
 from distutils.util import strtobool
 from dotenv import dotenv_values
+import requests
+import json
 
 # See Sample.env for example of what the .env file should look like
 config = dotenv_values(".env")
@@ -16,6 +24,11 @@ if DEBUG:
 
 # Setup the Discord Client Object
 client = discord.Client()
+
+
+def get_quote() -> str:
+    res = requests.get("https://zenquotes.io/api/random").json()[0]
+    return f"\"{res['q']}\" - {res['a']}"
 
 
 @client.event
@@ -41,6 +54,9 @@ async def on_message(message: discord.Message) -> None:
     # If the message starts with $hello, reply with Hello
     if message.content.startswith("$hello"):
         await message.channel.send("Hello!")
+    elif message.content.startswith("$inspire"):
+        quote = get_quote()
+        await message.channel.send(quote)
 
 
 def main():
