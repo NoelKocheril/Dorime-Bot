@@ -10,6 +10,7 @@ from distutils.util import strtobool
 from dotenv import dotenv_values
 import requests
 import json
+import itertools
 
 # See Sample.env for example of what the .env file should look like
 config = dotenv_values(".env")
