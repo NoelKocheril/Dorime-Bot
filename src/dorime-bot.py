@@ -2,8 +2,8 @@
 import discord
 
 # Spotify Stuff
-# import spotipy
-# from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials, BaseHTTPRequestHandler
 
 # Utility Imports
 from distutils.util import strtobool
