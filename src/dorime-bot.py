@@ -3,13 +3,14 @@ import discord
 
 # Spotify Stuff
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials, BaseHTTPRequestHandler
 
 # Utility Imports
 from distutils.util import strtobool
 from dotenv import dotenv_values
 import requests
 import json
+import itertools
 
 # See Sample.env for example of what the .env file should look like
 config = dotenv_values(".env")
