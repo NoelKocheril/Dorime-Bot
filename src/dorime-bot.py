@@ -10,12 +10,19 @@ from distutils.util import strtobool
 from dotenv import dotenv_values
 import requests
 import json
+import re
 
 # See Sample.env for example of what the .env file should look like
 config = dotenv_values(".env")
 
+# Regex Definitions
+SPOTIFY_URL_REGEX = re.compile(r"(?i)open\.spotify\.com/track/([a-zA-Z0-9]*)\?.*")
+
 # Update the .env file to swap the DEBUG Value
 DEBUG = bool(strtobool(config["DEBUG"])) if "DEBUG" in config else False
+
+# Get Watched Spotify Watched Channel
+SPOTIFY_WATCHED_CHANNEL = int(config["WATCHED_SPOTIFY_CHANNEL"])
 
 # Double check that the program is extracting the .env configurations correctly
 if DEBUG:
@@ -52,14 +59,39 @@ async def on_message(message: discord.Message) -> None:
         return
 
     author: discord.User = message.author
+    channel: discord.TextChannel = message.channel
+
+    if DEBUG:
+        print(
+            f"channel.id ({channel.id}) == SPOTIFY_WATCHED_CHANNEL ({SPOTIFY_WATCHED_CHANNEL}): {channel.id == SPOTIFY_WATCHED_CHANNEL}"
+        )
 
     # If the message starts with $hello, reply with Hello
-    if message.content.startswith("$hello"):
+    if channel.id == SPOTIFY_WATCHED_CHANNEL:
+        if DEBUG:
+            print("Message sent in Spotify Watch Channel")
+
+        spotify_track_ids = re.findall(SPOTIFY_URL_REGEX, message.content)
+
+        if DEBUG and not spotify_track_ids:
+            print("No Spotify Track URL found in Message")
+            return
+
+        await message.channel.send(
+            f"Found the Spotify URL with the Track id(s): {spotify_track_ids}"
+        )
+
+        # TODO: Add Track id to Spotify Playlist
+
+    elif message.content.startswith("$hello"):
         msg = f"Hello <@{author.id}>!"
         await message.channel.send(msg)
     elif message.content.startswith("$inspire"):
         quote = get_quote()
         await message.channel.send(quote)
+    elif message.content.startswith("$here"):
+
+        print(message)
 
 
 def main():
