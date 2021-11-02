@@ -2,15 +2,14 @@
 import discord
 
 # Spotify Stuff
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials, BaseHTTPRequestHandler
+# import spotipy
+# from spotipy.oauth2 import SpotifyClientCredentials
 
 # Utility Imports
 from distutils.util import strtobool
 from dotenv import dotenv_values
 import requests
 import json
-import itertools
 
 # See Sample.env for example of what the .env file should look like
 config = dotenv_values(".env")
@@ -52,9 +51,12 @@ async def on_message(message: discord.Message) -> None:
     if message.author == client.user:
         return
 
+    author: discord.User = message.author
+
     # If the message starts with $hello, reply with Hello
     if message.content.startswith("$hello"):
-        await message.channel.send("Hello!")
+        msg = f"Hello <@{author.id}>!"
+        await message.channel.send(msg)
     elif message.content.startswith("$inspire"):
         quote = get_quote()
         await message.channel.send(quote)
